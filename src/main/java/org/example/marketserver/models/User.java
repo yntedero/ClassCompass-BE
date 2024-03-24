@@ -1,4 +1,4 @@
-package com.mustmarket.model;
+package org.example.marketserver.models;
 
 import jakarta.persistence.*;
 
