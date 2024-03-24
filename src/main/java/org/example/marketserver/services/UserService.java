@@ -1,15 +1,16 @@
 package org.example.marketserver.services;
 
-import org.example.marketserver.repositories.UserRepository;
 import org.example.marketserver.dtos.UserDTO;
 import org.example.marketserver.models.User;
+import org.example.marketserver.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import javax.transaction.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.Optional;
 
 @Service
 public class UserService {
@@ -23,6 +24,7 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    @Transactional
     public UserDTO createUser(UserDTO userDTO) {
         User user = new User();
         user.setEmail(userDTO.getEmail());
@@ -35,14 +37,20 @@ public class UserService {
         return mapToDTO(user);
     }
 
+    @Transactional
     public Optional<UserDTO> getUserById(Long id) {
         return userRepository.findById(id).map(this::mapToDTO);
     }
 
+
+    @Transactional
     public List<UserDTO> getAllUsers() {
-        return userRepository.findAll().stream().map(this::mapToDTO).collect(Collectors.toList());
+        List<User> users = (List<User>) userRepository.findAll();
+        return users.stream().map(this::mapToDTO).collect(Collectors.toList());
     }
 
+
+    @Transactional
     public Optional<UserDTO> updateUser(Long id, UserDTO userDTO) {
         return userRepository.findById(id).map(user -> {
             user.setEmail(userDTO.getEmail());
@@ -56,6 +64,7 @@ public class UserService {
         });
     }
 
+    @Transactional
     public void deleteUser(Long id) {
         userRepository.deleteById(id);
     }
