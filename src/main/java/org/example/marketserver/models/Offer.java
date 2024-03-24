@@ -2,9 +2,12 @@ package org.example.marketserver.models;
 
 
 import jakarta.persistence.*;
-
+import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 @Entity
 @Table(name = "offers")
+@Data
 public class Offer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,9 +19,6 @@ public class Offer {
     @Column(nullable = false, length = 1024)
     private String description;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
-    private User provider;
-
-
+    @Column(name = "user_id", nullable = false)
+    private Long userId;
 }
