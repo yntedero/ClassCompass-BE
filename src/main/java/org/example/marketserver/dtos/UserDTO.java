@@ -12,15 +12,12 @@ public class UserDTO {
     private String email;
     private String firstName;
     private String lastName;
-    private String contact; // Can be used for phone numbers or other forms of contact.
+    private String contact;
 
-    // The password should be a hash. Never store or transmit plain-text passwords.
-    // This field can be used when creating or updating the user's password.
     private String passwordHash;
 
-    // Role field for authorization purposes. E.g., "ADMIN", "USER"
     private String role;
 
-    // Account status, e.g., "ACTIVE", "SUSPENDED", "DEACTIVATED"
+    // Account status "ACTIVE", "SUSPENDED", "DEACTIVATED"
     private String status;
 }
