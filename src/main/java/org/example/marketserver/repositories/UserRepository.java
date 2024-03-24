@@ -1,6 +1,6 @@
-package org.example.marketserver.repositories;
+package com.example.classserver.repositories;
 
-import org.example.marketserver.models.User;
+import com.mustmarket.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface UserRepository extends JpaRepository<User, Long> {
