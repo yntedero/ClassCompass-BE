@@ -1,13 +1,13 @@
-package com.example.classserver;
+package org.example.marketserver;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class ClassServerApplicationTests {
+class MarketServerApplicationTests {
 
-    @Test
-    void contextLoads() {
-    }
+	@Test
+	void contextLoads() {
+	}
 
 }
