@@ -1,7 +1,7 @@
 package org.example.marketserver.models;
 
 import jakarta.persistence.*;
-import org.springframework.security.crypto.bcrypt.BCrypt;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Entity
 @Table(name = "users")
@@ -28,7 +28,6 @@ public class User {
     @Column(nullable = false)
     private Boolean isActive;
 
-
     public Long getId() {
         return id;
     }
@@ -49,12 +48,13 @@ public class User {
         return passwordHash;
     }
 
-    public void setPassword(String password) {
-        this.passwordHash = BCrypt.hashpw(password, BCrypt.gensalt());
+    public void setPasswordHash(String passwordHash) {
+        this.passwordHash = passwordHash;
     }
 
-    public boolean checkPassword(String password) {
-        return BCrypt.checkpw(password, this.passwordHash);
+    // Use this method to set encrypted password
+    public void setPassword(String password, BCryptPasswordEncoder encoder) {
+        this.passwordHash = encoder.encode(password);
     }
 
     public String getName() {
@@ -88,5 +88,4 @@ public class User {
     public void setIsActive(Boolean isActive) {
         this.isActive = isActive;
     }
-
 }
