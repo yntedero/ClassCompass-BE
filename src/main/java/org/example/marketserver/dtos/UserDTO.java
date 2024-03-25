@@ -21,3 +21,4 @@ public class UserDTO {
     // Account status "ACTIVE", "SUSPENDED", "DEACTIVATED"
     private String status;
 }
+

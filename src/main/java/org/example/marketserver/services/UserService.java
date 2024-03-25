@@ -38,8 +38,8 @@ public class UserService {
     }
 
     @Transactional
-    public Optional<UserDTO> getUserById(Long id) {
-        return userRepository.findById(id).map(this::mapToDTO);
+    public Optional<User> getUserById(Long id) {
+        return userRepository.findById(id);
     }
 
 
