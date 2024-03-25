@@ -1,7 +1,6 @@
 package org.example.marketserver.controllers;
 
 import org.example.marketserver.dtos.UserDTO;
-import org.example.marketserver.models.User;
 import org.example.marketserver.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -22,13 +21,13 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO userDTO) {
-        UserDTO newUser = userService.createUser(userDTO);
-        return ResponseEntity.ok(newUser);
+        UserDTO createdUser = userService.createUser(userDTO);
+        return ResponseEntity.ok(createdUser);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable Long id) {
-        User user = userService.getUserById(id)
+    public ResponseEntity<UserDTO> getUserById(@PathVariable Long id) {
+        UserDTO user = userService.getUserById(id)
                 .orElseThrow(() -> new RuntimeException("User not found with id " + id));
         return ResponseEntity.ok(user);
     }
@@ -49,6 +48,6 @@ public class UserController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 }
