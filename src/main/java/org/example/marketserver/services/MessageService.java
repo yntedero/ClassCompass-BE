@@ -6,9 +6,7 @@ import org.example.marketserver.models.User;
 import org.example.marketserver.repositories.MessageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import javax.transaction.Transactional;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,51 +24,38 @@ public class MessageService {
 
     @Transactional
     public MessageDTO sendMessage(MessageDTO messageDTO) {
-        User sender = userService.getUserById(messageDTO.getSenderId())
-                .orElseThrow(() -> new RuntimeException("User not found with id " + messageDTO.getSenderId()));
-        User receiver = userService.getUserById(messageDTO.getReceiverId())
-                .orElseThrow(() -> new RuntimeException("User not found with id " + messageDTO.getReceiverId()));
+        // Fetch User entities directly from the database
+        User sender = userService.getUserEntityById(messageDTO.getSenderId())
+                .orElseThrow(() -> new RuntimeException("Sender not found"));
+        User receiver = userService.getUserEntityById(messageDTO.getReceiverId())
+                .orElseThrow(() -> new RuntimeException("Receiver not found"));
 
-        List<Message> existingMessages = messageRepository.findMessagesBetweenUsers(sender, receiver);
-        Message message;
-        if (existingMessages.isEmpty()) {
-            message = new Message();
-            message.setSender(sender);
-            message.setReceiver(receiver);
-        } else {
-            message = existingMessages.get(0);
-        }
-
+        // Mapping DTO to Entity
+        Message message = new Message();
+        message.setSender(sender);
+        message.setReceiver(receiver);
         message.setContent(messageDTO.getContent());
-        message.setTimestamp(LocalDateTime.now());
-        message = messageRepository.save(message);
-        return mapToDTO(message);
+        message.setTimestamp(messageDTO.getTimestamp());
+
+        // Save and return DTO
+        Message savedMessage = messageRepository.save(message);
+        return mapToDTO(savedMessage);
     }
 
-
-
-
-
-    @Transactional
     public List<MessageDTO> getMessagesBetweenUsers(Long senderId, Long receiverId) {
-        User sender = userService.getUserById(senderId)
-                .orElseThrow(() -> new RuntimeException("User not found with id " + senderId));
-        User receiver = userService.getUserById(receiverId)
-                .orElseThrow(() -> new RuntimeException("User not found with id " + receiverId));
-
-        List<Message> messages = messageRepository.findMessagesBetweenUsers(sender, receiver);
+        // Fetch messages from repository based on sender and receiver IDs
+        List<Message> messages = messageRepository.findBySenderIdAndReceiverIdOrderByTimestampAsc(senderId, receiverId);
+        // Map entities to DTOs
         return messages.stream().map(this::mapToDTO).collect(Collectors.toList());
     }
 
-
     private MessageDTO mapToDTO(Message message) {
-        MessageDTO messageDTO = new MessageDTO();
-        messageDTO.setId(message.getId());
-        messageDTO.setSenderId(message.getSender().getId());
-        messageDTO.setReceiverId(message.getReceiver().getId());
-        messageDTO.setContent(message.getContent());
-        messageDTO.setTimestamp(message.getTimestamp());
-        return messageDTO;
+        MessageDTO dto = new MessageDTO();
+        dto.setId(message.getId());
+        dto.setSenderId(message.getSender().getId());
+        dto.setReceiverId(message.getReceiver().getId());
+        dto.setContent(message.getContent());
+        dto.setTimestamp(message.getTimestamp());
+        return dto;
     }
-
 }
