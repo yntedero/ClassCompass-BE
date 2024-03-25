@@ -1,6 +1,7 @@
 package org.example.marketserver.controllers;
 
 import org.example.marketserver.dtos.UserDTO;
+import org.example.marketserver.models.User;
 import org.example.marketserver.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -26,8 +27,8 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UserDTO> getUserById(@PathVariable Long id) {
-        UserDTO user = userService.getUserById(id)
+    public ResponseEntity<User> getUserById(@PathVariable Long id) {
+        User user = userService.getUserById(id)
                 .orElseThrow(() -> new RuntimeException("User not found with id " + id));
         return ResponseEntity.ok(user);
     }
