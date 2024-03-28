@@ -24,28 +24,23 @@ public class MessageService {
 
     @Transactional
     public MessageDTO sendMessage(MessageDTO messageDTO) {
-        // Fetch User entities directly from the database
         User sender = userService.getUserEntityById(messageDTO.getSenderId())
                 .orElseThrow(() -> new RuntimeException("Sender not found"));
         User receiver = userService.getUserEntityById(messageDTO.getReceiverId())
                 .orElseThrow(() -> new RuntimeException("Receiver not found"));
 
-        // Mapping DTO to Entity
         Message message = new Message();
         message.setSender(sender);
         message.setReceiver(receiver);
         message.setContent(messageDTO.getContent());
         message.setTimestamp(messageDTO.getTimestamp());
 
-        // Save and return DTO
         Message savedMessage = messageRepository.save(message);
         return mapToDTO(savedMessage);
     }
 
     public List<MessageDTO> getMessagesBetweenUsers(Long senderId, Long receiverId) {
-        // Fetch messages from repository based on sender and receiver IDs
         List<Message> messages = messageRepository.findBySenderIdAndReceiverIdOrderByTimestampAsc(senderId, receiverId);
-        // Map entities to DTOs
         return messages.stream().map(this::mapToDTO).collect(Collectors.toList());
     }
 

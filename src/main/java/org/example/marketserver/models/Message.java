@@ -65,4 +65,8 @@ public class Message {
     public LocalDateTime getTimestamp() {
         return timestamp;
     }
+    @PrePersist
+    public void prePersist() {
+        timestamp = LocalDateTime.now();
+    }
 }
