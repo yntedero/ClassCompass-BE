@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Application</title>
+    <!-- Include Bootstrap CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+    <h1>Chat Application</h1>
+    <!-- Input fields for sender, receiver, and content -->
+    <div class="form-group">
+        <label for="senderId">Sender ID:</label>
+        <input type="text" class="form-control" id="senderId">
+    </div>
+    <div class="form-group">
+        <label for="receiverId">Receiver ID:</label>
+        <input type="text" class="form-control" id="receiverId">
+    </div>
+    <div class="form-group">
+        <label for="messageContent">Message:</label>
+        <textarea class="form-control" id="messageContent" rows="3"></textarea>
+    </div>
+    <button type="button" class="btn btn-primary" onclick="sendMessage()">Send Message</button>
+
+    <!-- Display area for messages -->
+    <h2>Messages:</h2>
+    <ul id="messageList" class="list-group"></ul>
+</div>
+
+<!-- Include jQuery and Bootstrap JS -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<!-- WebSocket configuration -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.6.1/sockjs.min.js" integrity="sha512-1QvjE7BtotQjkq8PxLeF6P46gEpBRXuskzIVgjFpekzFVF4yjRgrQvTG1MTOJ3yQgvTteKAcO7DSZI92+u/yZw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="
+https://cdn.jsdelivr.net/npm/stomp-websocket@2.3.4-next/lib/stomp.min.js
+"></script>
+
+<script>
+
+    var socket = new WebSocket('ws://localhost:8080/ws');
+    socket.onopen = function(event) {
+        console.log('WebSocket connection opened');
+    };
+    socket.onclose = function(event) {
+        console.log('WebSocket connection closed');
+    };
+    socket.onerror = function(error) {
+        console.error('WebSocket error:', error);
+    };
+
+    var stompClient = null;
+
+    function connect() {
+        var socket = new SockJS('/ws');
+        stompClient = Stomp.over(socket);
+        stompClient.connect({}, function(frame) {
+            console.log('Connected: ' + frame);
+            stompClient.subscribe('/user/queue/messages', function(message) {
+                showMessage(JSON.parse(message.body));
+            });
+        });
+    }
+
+    function sendMessage() {
+        var senderId = document.getElementById('senderId').value;
+        var receiverId = document.getElementById('receiverId').value;
+        var content = document.getElementById('messageContent').value;
+
+        var message = {
+            senderId: senderId,
+            receiverId: receiverId,
+            content: content
+        };
+
+        stompClient.send("/app/chat", {}, JSON.stringify(message));
+    }
+
+    async function fetchAndDisplayUserChat() {
+        const userChatResponse = await fetch(`/messages/${nickname}/${selectedUserId}`);
+        const userChat = await userChatResponse.json();
+        const messageList = document.getElementById('messageList');
+        messageList.innerHTML = ''; // Clear previous messages
+        userChat.forEach(chat => {
+            showMessage(chat); // Display each message
+        });
+        messageList.scrollTop = messageList.scrollHeight; // Scroll to bottom
+    }
+
+    function showMessage(message) {
+        var messageList = document.getElementById('messageList');
+        var listItem = document.createElement('li');
+        listItem.className = 'list-group-item';
+        listItem.textContent = 'From: ' + message.senderId + ', To: ' + message.receiverId + ', Content: ' + message.content;
+        messageList.appendChild(listItem);
+    }
+
+    connect();
+
+</script>
+</body>
+</html>

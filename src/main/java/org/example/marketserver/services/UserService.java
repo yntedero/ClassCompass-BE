@@ -1,5 +1,6 @@
 package org.example.marketserver.services;
 
+import lombok.RequiredArgsConstructor;
 import org.example.marketserver.dtos.UserDTO;
 import org.example.marketserver.models.User;
 import org.example.marketserver.repositories.UserRepository;

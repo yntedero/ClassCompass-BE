@@ -2,11 +2,12 @@ package org.example.marketserver.services;
 
 import org.example.marketserver.dtos.MessageDTO;
 import org.example.marketserver.models.Message;
-import org.example.marketserver.models.User;
 import org.example.marketserver.repositories.MessageRepository;
+import org.example.marketserver.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import javax.transaction.Transactional;
+
+import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -14,26 +15,20 @@ import java.util.stream.Collectors;
 public class MessageService {
 
     private final MessageRepository messageRepository;
-    private final UserService userService;
+    private final UserRepository userRepository;
 
     @Autowired
-    public MessageService(MessageRepository messageRepository, UserService userService) {
+    public MessageService(MessageRepository messageRepository, UserRepository userRepository) {
         this.messageRepository = messageRepository;
-        this.userService = userService;
+        this.userRepository = userRepository;
     }
 
     @Transactional
     public MessageDTO sendMessage(MessageDTO messageDTO) {
-        User sender = userService.getUserEntityById(messageDTO.getSenderId())
-                .orElseThrow(() -> new RuntimeException("Sender not found"));
-        User receiver = userService.getUserEntityById(messageDTO.getReceiverId())
-                .orElseThrow(() -> new RuntimeException("Receiver not found"));
-
         Message message = new Message();
-        message.setSender(sender);
-        message.setReceiver(receiver);
+        message.setSender(userRepository.getById(messageDTO.getSenderId()));
+        message.setReceiver(userRepository.getById(messageDTO.getReceiverId()));
         message.setContent(messageDTO.getContent());
-        message.setTimestamp(messageDTO.getTimestamp());
 
         Message savedMessage = messageRepository.save(message);
         return mapToDTO(savedMessage);

@@ -2,10 +2,12 @@ package org.example.marketserver.dtos;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
+@Getter
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -36,23 +38,4 @@ public class MessageDTO {
         this.timestamp = timestamp;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public Long getSenderId() {
-        return senderId;
-    }
-
-    public Long getReceiverId() {
-        return receiverId;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public LocalDateTime getTimestamp() {
-        return timestamp;
-    }
 }
