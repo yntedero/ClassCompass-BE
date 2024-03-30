@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
+
+import java.time.Instant;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,7 +31,6 @@ public class MessageService {
         message.setSender(userRepository.getById(messageDTO.getSenderId()));
         message.setReceiver(userRepository.getById(messageDTO.getReceiverId()));
         message.setContent(messageDTO.getContent());
-
         Message savedMessage = messageRepository.save(message);
         return mapToDTO(savedMessage);
     }
@@ -45,7 +46,6 @@ public class MessageService {
         dto.setSenderId(message.getSender().getId());
         dto.setReceiverId(message.getReceiver().getId());
         dto.setContent(message.getContent());
-        dto.setTimestamp(message.getTimestamp());
         return dto;
     }
 }

@@ -6,6 +6,7 @@ import org.example.marketserver.services.MessageService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,13 +21,15 @@ public class MessageController {
     private final SimpMessagingTemplate messagingTemplate;
     private final MessageService messageService; // Assuming you've renamed it from ChatMessageService
 
-    @MessageMapping("/chat")
-    public void processMessage(@Payload MessageDTO messageDTO) {
+    @MessageMapping("/chat.send")
+    @SendTo("/user/messages")
+    public MessageDTO processMessage(@Payload MessageDTO messageDTO) {
         MessageDTO savedMessage = messageService.sendMessage(messageDTO);
         messagingTemplate.convertAndSendToUser(
                 String.valueOf(messageDTO.getReceiverId()), "/queue/messages",
                 savedMessage
         );
+        return messageDTO;
     }
 
     @GetMapping("/messages/{senderId}/{recipientId}")

@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.Instant;
 
 
 @Data
@@ -15,7 +14,6 @@ public class MessageDTO {
     private Long senderId;
     private Long receiverId;
     private String content;
-    private Instant timestamp;
 
     public void setId(Long id) {
         this.id = id;
@@ -33,9 +31,6 @@ public class MessageDTO {
         this.content = content;
     }
 
-    public void setTimestamp(Instant timestamp) {
-        this.timestamp = timestamp;
-    }
 
     public Long getId() {
         return id;
@@ -53,7 +48,4 @@ public class MessageDTO {
         return content;
     }
 
-    public Instant getTimestamp() {
-        return timestamp;
-    }
 }
