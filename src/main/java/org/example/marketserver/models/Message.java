@@ -3,7 +3,9 @@ package org.example.marketserver.models;
 import jakarta.persistence.*;
 import org.example.marketserver.dtos.UserDTO;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.temporal.TemporalAccessor;
 
 @Entity
 @Table(name = "messages")
@@ -24,7 +26,7 @@ public class Message {
     private String content;
 
     @Column(nullable = false)
-    private LocalDateTime timestamp;
+    private Instant timestamp;
 
     public void setId(Long id) {
         this.id = id;
@@ -42,7 +44,7 @@ public class Message {
         this.content = content;
     }
 
-    public void setTimestamp(LocalDateTime timestamp) {
+    public void setTimestamp(Instant timestamp) {
         this.timestamp = timestamp;
     }
 
@@ -62,11 +64,11 @@ public class Message {
         return content;
     }
 
-    public LocalDateTime getTimestamp() {
+    public Instant getTimestamp() {
         return timestamp;
     }
     @PrePersist
     public void prePersist() {
-        timestamp = LocalDateTime.now();
+        timestamp = Instant.now();
     }
 }

@@ -43,29 +43,20 @@ https://cdn.jsdelivr.net/npm/stomp-websocket@2.3.4-next/lib/stomp.min.js
 
 <script>
 
-    var socket = new WebSocket('ws://localhost:8080/ws');
-    socket.onopen = function(event) {
-        console.log('WebSocket connection opened');
-    };
-    socket.onclose = function(event) {
-        console.log('WebSocket connection closed');
-    };
-    socket.onerror = function(error) {
-        console.error('WebSocket error:', error);
-    };
-
-    var stompClient = null;
+    var stompClient = null; // Declare stompClient globally
 
     function connect() {
         var socket = new SockJS('/ws');
         stompClient = Stomp.over(socket);
         stompClient.connect({}, function(frame) {
-            console.log('Connected: ' + frame);
-            stompClient.subscribe('/user/queue/messages', function(message) {
+            stompClient.subscribe('/user/2/queue/messages', function (message) {
                 showMessage(JSON.parse(message.body));
             });
+            fetchAndDisplayUserChat().then();
         });
     }
+
+    connect();
 
     function sendMessage() {
         var senderId = document.getElementById('senderId').value;
@@ -82,14 +73,14 @@ https://cdn.jsdelivr.net/npm/stomp-websocket@2.3.4-next/lib/stomp.min.js
     }
 
     async function fetchAndDisplayUserChat() {
-        const userChatResponse = await fetch(`/messages/${nickname}/${selectedUserId}`);
+        const userChatResponse = await fetch(`/messages/1/2`);
         const userChat = await userChatResponse.json();
         const messageList = document.getElementById('messageList');
-        messageList.innerHTML = ''; // Clear previous messages
+        messageList.innerHTML = '';
         userChat.forEach(chat => {
-            showMessage(chat); // Display each message
+            showMessage(chat);
         });
-        messageList.scrollTop = messageList.scrollHeight; // Scroll to bottom
+        messageList.scrollTop = messageList.scrollHeight;
     }
 
     function showMessage(message) {
@@ -100,7 +91,16 @@ https://cdn.jsdelivr.net/npm/stomp-websocket@2.3.4-next/lib/stomp.min.js
         messageList.appendChild(listItem);
     }
 
-    connect();
+    async function onMessageReceived(payload) {
+        console.log('Message received', payload);
+        const message = JSON.parse(payload.body);
+        if (selectedUserId && selectedUserId === message.senderId) {
+            showMessage(message.senderId, message.content);
+        }
+
+
+
+    }
 
 </script>
 </body>
