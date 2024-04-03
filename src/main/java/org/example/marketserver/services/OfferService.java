@@ -49,13 +49,13 @@ public class OfferService {
 
         return mapToDTO(savedOffer);
     }
-    public List<OfferDTO> getAllOffers() {
-        List<Offer> offers = offerRepository.findAll();
-
+    public List<OfferDTO> getAllOffers(Long cityId, Long categoryId) {
+        List<Offer> offers = offerRepository.findAllByCityIdAndCategoryId(cityId, categoryId);
         return offers.stream()
                 .map(this::mapToDTO)
                 .collect(Collectors.toList());
     }
+
 
     public void deleteOffer(Long id) {
         if (!offerRepository.existsById(id)) {
