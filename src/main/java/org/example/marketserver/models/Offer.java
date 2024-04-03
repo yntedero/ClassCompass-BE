@@ -21,4 +21,12 @@ public class Offer {
 
     @Column(name = "user_id", nullable = false)
     private Long userId;
+
+    @ManyToOne
+    @JoinColumn(name = "city_id", nullable = false)
+    private City city;
+
+    @ManyToOne
+    @JoinColumn(name = "category_id", nullable = false)
+    private Category category;
 }

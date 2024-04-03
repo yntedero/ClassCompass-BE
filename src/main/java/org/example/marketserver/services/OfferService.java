@@ -11,6 +11,9 @@ import org.example.marketserver.models.User;
 import org.example.marketserver.exceptions.*;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 @Service
 public class OfferService {
 
@@ -24,19 +27,28 @@ public class OfferService {
     }
 
     public OfferDTO createOffer(OfferDTO offerDTO) {
-        userRepository.findById(offerDTO.getUserId())
-                .orElseThrow(() -> new NotFoundException("User not found"));
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String authenticatedUsername = authentication.getName();
+
+        User authenticatedUser = new User();
+        authenticatedUser.setEmail(authenticatedUsername);
+
+        if (offerDTO.getCategory() == null || offerDTO.getCity() == null) {
+            throw new IllegalArgumentException("you must provide a catogyr and a city :(");
+        }
+
 
         Offer offer = new Offer();
         offer.setTitle(offerDTO.getTitle());
         offer.setDescription(offerDTO.getDescription());
-        offer.setUserId(offerDTO.getUserId());
+        offer.setUserId(authenticatedUser.getId());
+        offer.setCity(offerDTO.getCity());
+        offer.setCategory(offerDTO.getCategory());
 
         Offer savedOffer = offerRepository.save(offer);
 
         return mapToDTO(savedOffer);
     }
-
     public List<OfferDTO> getAllOffers() {
         List<Offer> offers = offerRepository.findAll();
 

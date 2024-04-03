@@ -37,7 +37,6 @@ public class MarketAuthenticationFilter extends OncePerRequestFilter {
         UsernamePasswordAuthenticationToken auth =
                 new UsernamePasswordAuthenticationToken(token, null, roles); // vytvorenie autentifikacie
         SecurityContextHolder.getContext().setAuthentication(auth); // nastavenie autentifikacie
-
         filterChain.doFilter(request, response); // preposlanie poziadavky
     }
 }
