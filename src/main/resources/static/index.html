@@ -64,7 +64,7 @@
         var messageList = document.getElementById('messageList');
         var listItem = document.createElement('li');
         listItem.className = 'list-group-item';
-        listItem.textContent = 'From: ' + message.senderId + ', To: ' + message.receiverId + ', Content: ' + message.content;
+        listItem.textContent = 'From: ' + message.senderId + ', To: ' + message.receiverId + ', Content: ' + message.content +', Time: '+message.timestamp;
         messageList.appendChild(listItem);
         messageList.scrollTop = messageList.scrollHeight;
     }
@@ -102,7 +102,7 @@
         var messageList = document.getElementById('messageList');
         var listItem = document.createElement('li');
         listItem.className = 'list-group-item';
-        listItem.textContent = 'From: ' + message.senderId + ', To: ' + message.receiverId + ', Content: ' + message.content;
+        listItem.textContent = 'From: ' + message.senderId + ', To: ' + message.receiverId + ', Content: ' + message.content + ', Time: '+message.timestamp;
         messageList.appendChild(listItem);
     }
 

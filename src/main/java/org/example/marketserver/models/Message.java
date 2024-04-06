@@ -1,12 +1,8 @@
 package org.example.marketserver.models;
 
 import jakarta.persistence.*;
-import org.example.marketserver.dtos.UserDTO;
 
 import java.text.SimpleDateFormat;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.temporal.TemporalAccessor;
 import java.util.Date;
 
 @Entity
@@ -71,6 +67,6 @@ public class Message {
     }
     @PrePersist
     protected void onCreate() {
-        timestamp = new SimpleDateFormat("HH:mm:ss").format(new Date());
+        timestamp = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss").format(new Date());
     }
 }

@@ -31,6 +31,7 @@ public class MessageService {
         message.setSender(userRepository.getById(messageDTO.getSenderId()));
         message.setReceiver(userRepository.getById(messageDTO.getReceiverId()));
         message.setContent(messageDTO.getContent());
+        message.setTimestamp(messageDTO.getTimestamp());
         Message savedMessage = messageRepository.save(message);
         return mapToDTO(savedMessage);
     }
@@ -46,6 +47,7 @@ public class MessageService {
         dto.setSenderId(message.getSender().getId());
         dto.setReceiverId(message.getReceiver().getId());
         dto.setContent(message.getContent());
+        dto.setTimestamp(message.getTimestamp());
         return dto;
     }
 }

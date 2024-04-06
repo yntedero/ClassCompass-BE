@@ -19,7 +19,7 @@ import java.util.List;
 public class MessageController {
 
     private final SimpMessagingTemplate messagingTemplate;
-    private final MessageService messageService; // Assuming you've renamed it from ChatMessageService
+    private final MessageService messageService;
 
     @MessageMapping("/chat.send")
     @SendTo("/user/messages")
@@ -29,7 +29,7 @@ public class MessageController {
                 String.valueOf(messageDTO.getReceiverId()), "/queue/messages",
                 savedMessage
         );
-        return messageDTO;
+        return savedMessage;
     }
 
     @GetMapping("/messages/{senderId}/{recipientId}")

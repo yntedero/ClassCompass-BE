@@ -14,6 +14,15 @@ public class MessageDTO {
     private Long senderId;
     private Long receiverId;
     private String content;
+    private String timestamp;
+
+    public String getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(String timestamp) {
+        this.timestamp = timestamp;
+    }
 
     public void setId(Long id) {
         this.id = id;
