@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -15,6 +16,6 @@ public class OfferDTO {
     private String title;
     private String description;
     private Long userId;
-    private City city;
-    private Category category;
+    private Long cityId;
+    private Long categoryId;
 }

@@ -1,11 +1,13 @@
 package org.example.marketserver.controllers;
 
+import org.example.marketserver.dtos.CategoryDTO;
 import org.example.marketserver.models.Category;
+import org.example.marketserver.models.City;
 import org.example.marketserver.services.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+import org.example.marketserver.repositories.CategoryRepository;
 import java.util.List;
 
 @RestController
@@ -19,5 +21,13 @@ public class CategoryController {
         this.categoryService = categoryService;
     }
 
-    // Implement endpoints for category CRUD operations
+    @PostMapping
+    public CategoryDTO createCategory(@RequestBody CategoryDTO categoryDTO) {
+        return categoryService.createCategory(categoryDTO);
+    }
+
+    @GetMapping
+    public List<CategoryDTO> getAll() {
+        return categoryService.getAllCategories();
+    }
 }
