@@ -1,9 +1,9 @@
 package org.example.marketserver.models;
 
 import jakarta.persistence.*;
-import org.example.marketserver.dtos.UserDTO;
 
-import java.time.LocalDateTime;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 @Entity
 @Table(name = "messages")
@@ -24,7 +24,7 @@ public class Message {
     private String content;
 
     @Column(nullable = false)
-    private LocalDateTime timestamp;
+    private String timestamp;
 
     public void setId(Long id) {
         this.id = id;
@@ -42,7 +42,7 @@ public class Message {
         this.content = content;
     }
 
-    public void setTimestamp(LocalDateTime timestamp) {
+    public void setTimestamp(String timestamp) {
         this.timestamp = timestamp;
     }
 
@@ -62,7 +62,11 @@ public class Message {
         return content;
     }
 
-    public LocalDateTime getTimestamp() {
+    public String getTimestamp() {
         return timestamp;
+    }
+    @PrePersist
+    protected void onCreate() {
+        timestamp = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss").format(new Date());
     }
 }

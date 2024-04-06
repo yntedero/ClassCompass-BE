@@ -1,34 +1,41 @@
 package org.example.marketserver.controllers;
 
+import lombok.RequiredArgsConstructor;
 import org.example.marketserver.dtos.MessageDTO;
 import org.example.marketserver.services.MessageService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.Payload;
+import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 
-@RestController
-@RequestMapping("/api/messages")
+@Controller
+@RequiredArgsConstructor
 public class MessageController {
 
+    private final SimpMessagingTemplate messagingTemplate;
     private final MessageService messageService;
 
-    @Autowired
-    public MessageController(MessageService messageService) {
-        this.messageService = messageService;
+    @MessageMapping("/chat.send")
+    @SendTo("/user/messages")
+    public MessageDTO processMessage(@Payload MessageDTO messageDTO) {
+        MessageDTO savedMessage = messageService.sendMessage(messageDTO);
+        messagingTemplate.convertAndSendToUser(
+                String.valueOf(messageDTO.getReceiverId()), "/queue/messages",
+                savedMessage
+        );
+        return savedMessage;
     }
 
-    @PostMapping("/send")
-    public ResponseEntity<MessageDTO> sendMessage(@RequestBody MessageDTO messageDTO) {
-        MessageDTO sentMessage = messageService.sendMessage(messageDTO);
-        return ResponseEntity.ok(sentMessage);
-    }
-
-    @GetMapping("/{senderId}/{receiverId}")
-    public ResponseEntity<List<MessageDTO>> getMessagesBetweenUsers(
-            @PathVariable Long senderId, @PathVariable Long receiverId) {
-        List<MessageDTO> messages = messageService.getMessagesBetweenUsers(senderId, receiverId);
-        return ResponseEntity.ok(messages);
+    @GetMapping("/messages/{senderId}/{recipientId}")
+    public ResponseEntity<List<MessageDTO>> findChatMessages(@PathVariable Long senderId,
+                                                             @PathVariable Long recipientId) {
+        return ResponseEntity
+                .ok(messageService.getMessagesBetweenUsers(senderId, recipientId));
     }
 }

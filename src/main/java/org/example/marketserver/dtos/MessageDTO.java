@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
+
 
 @Data
 @NoArgsConstructor
@@ -14,5 +14,47 @@ public class MessageDTO {
     private Long senderId;
     private Long receiverId;
     private String content;
-    private LocalDateTime timestamp;
+    private String timestamp;
+
+    public String getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(String timestamp) {
+        this.timestamp = timestamp;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setSenderId(Long senderId) {
+        this.senderId = senderId;
+    }
+
+    public void setReceiverId(Long receiverId) {
+        this.receiverId = receiverId;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+
+    public Long getId() {
+        return id;
+    }
+
+    public Long getSenderId() {
+        return senderId;
+    }
+
+    public Long getReceiverId() {
+        return receiverId;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
 }
