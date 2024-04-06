@@ -17,7 +17,6 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable()) //ochrany mechanizmus, ktory sa pouziva na ochranu pred CSRF utokmi
                 .authorizeHttpRequests(auth ->
                                 auth.anyRequest().authenticated() // kazda poziadavka musi byt overena
-                        //.requestMatchers("/api/customers/**").permitAll()
                 );
         http.addFilterBefore(new MarketAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class); // pridanie filtra
         return http.build(); // vytvorenie filtra

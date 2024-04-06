@@ -21,4 +21,10 @@ public class Offer {
 
     @Column(name = "user_id", nullable = false)
     private Long userId;
+
+    @Column(name = "city_id", nullable = false)
+    private Long cityId;
+
+    @Column(name = "category_id", nullable = false)
+    private Long categoryId;
 }
