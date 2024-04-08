@@ -30,6 +30,7 @@ public class UserService {
         User user = new User();
         user.setEmail(userDTO.getEmail());
         user.setName(userDTO.getFirstName() + " " + userDTO.getLastName());
+
         user.setPasswordHash(passwordEncoder.encode(userDTO.getPassword()));
         user.setContactNumber(userDTO.getContact());
         user.setRole(userDTO.getRole().toUpperCase());
@@ -77,6 +78,10 @@ public class UserService {
         dto.setStatus(user.getIsActive() ? "ACTIVE" : "INACTIVE");
         return dto;
     }
+
+    //todo registration
+    //todo login
+    //todo logout
 
     public Optional<User> getUserEntityById(Long id) {
         return userRepository.findById(id);
