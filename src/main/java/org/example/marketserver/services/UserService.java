@@ -79,9 +79,6 @@ public class UserService {
         return dto;
     }
 
-    //todo registration
-    //todo login
-    //todo logout
 
     public Optional<User> getUserEntityById(Long id) {
         return userRepository.findById(id);
