@@ -6,7 +6,6 @@ public class UserDTO {
     private String firstName;
     private String lastName;
     private String contact;
-    private String password;
     private String role;
     private String status;
 
@@ -48,14 +47,6 @@ public class UserDTO {
 
     public void setContact(String contact) {
         this.contact = contact;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public String getRole() {

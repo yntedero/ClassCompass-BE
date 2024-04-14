@@ -1,25 +1,42 @@
 package org.example.marketserver.models;
 
-import org.springframework.security.core.GrantedAuthority;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+@RequiredArgsConstructor
+@Getter
 public enum Role {
-    ADMIN(Set.of("ROLE_ADMIN", "ACCESS_READ", "ACCESS_WRITE")),
-    USER(Set.of("ROLE_USER", "ACCESS_READ")),
-    GUEST(Set.of("ROLE_GUEST"));
+    USER(Collections.emptySet()),
+    ADMIN(Set.of(
+            Permission.ADMIN_READ,
+            Permission.ADMIN_UPDATE,
+            Permission.ADMIN_CREATE,
+            Permission.ADMIN_DELETE,
+            Permission.MANAGER_READ,
+            Permission.MANAGER_UPDATE,
+            Permission.MANAGER_CREATE,
+            Permission.MANAGER_DELETE
+    )),
+    MANAGER(Set.of(
+            Permission.MANAGER_READ,
+            Permission.MANAGER_UPDATE,
+            Permission.MANAGER_CREATE,
+            Permission.MANAGER_DELETE
+    ));
 
-    private final Set<String> permissions;
+    private final Set<Permission> permissions;
 
-    Role(Set<String> permissions) {
-        this.permissions = permissions;
-    }
-
-    public Set<GrantedAuthority> getAuthorities() {
-        return permissions.stream()
-                .map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toSet());
+    public List<SimpleGrantedAuthority> getAuthorities() {
+        List<SimpleGrantedAuthority> authorities = permissions.stream()
+                .map(permission -> new SimpleGrantedAuthority(permission.getPermission()))
+                .collect(Collectors.toList());
+        authorities.add(new SimpleGrantedAuthority("ROLE_" + this.name()));
+        return authorities;
     }
 }

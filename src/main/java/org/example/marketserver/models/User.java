@@ -1,15 +1,12 @@
 package org.example.marketserver.models;
 
 import jakarta.persistence.*;
-import org.example.marketserver.token.Token;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.Collection;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Collections;
 
 @Entity
 @Table(name = "users")
@@ -24,20 +21,17 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private String passwordHash;
 
-    @Column(nullable = false)
+    @Column
     private String firstname;
 
-    @Column(nullable = false)
+    @Column
     private String lastname;
 
     @Column
     private String contactNumber;
 
-    @Enumerated(EnumType.STRING)
-    private Role role;
-
-    @OneToMany(mappedBy = "user")
-    private List<Token> tokens;
+    @Column(nullable = false)
+    private String role;
 
     @Column(nullable = false)
     private Boolean isActive;
@@ -66,10 +60,6 @@ public class User implements UserDetails {
         this.passwordHash = passwordHash;
     }
 
-    public void setPassword(String password, BCryptPasswordEncoder encoder) {
-        this.passwordHash = encoder.encode(password);
-    }
-
     public String getFirstname() {
         return firstname;
     }
@@ -94,20 +84,12 @@ public class User implements UserDetails {
         this.contactNumber = contactNumber;
     }
 
-    public Role getRole() {
+    public String getRole() {
         return role;
     }
 
-    public void setRole(Role role) {
+    public void setRole(String role) {
         this.role = role;
-    }
-
-    public List<Token> getTokens() {
-        return tokens;
-    }
-
-    public void setTokens(List<Token> tokens) {
-        this.tokens = tokens;
     }
 
     public Boolean getIsActive() {
@@ -120,9 +102,7 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return role.getAuthorities().stream()
-                .map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toList());
+        return Collections.singletonList(new SimpleGrantedAuthority(role));
     }
 
     @Override
