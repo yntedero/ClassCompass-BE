@@ -41,6 +41,15 @@
 
 <script>
 
+
+    const token = '123123';
+    fetch('http://localhost:8080', {
+        method: 'GET',
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    });
+
     var stompClient = null;
 
     function connect() {
