@@ -1,16 +1,11 @@
 package org.example.marketserver.models;
 
 import jakarta.persistence.*;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-
-import java.util.Collection;
-import java.util.Collections;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Entity
 @Table(name = "users")
-public class User implements UserDetails {
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -21,11 +16,8 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private String passwordHash;
 
-    @Column
-    private String firstname;
-
-    @Column
-    private String lastname;
+    @Column(nullable = false)
+    private String name;
 
     @Column
     private String contactNumber;
@@ -60,20 +52,17 @@ public class User implements UserDetails {
         this.passwordHash = passwordHash;
     }
 
-    public String getFirstname() {
-        return firstname;
+    // Use this method to set encrypted password
+    public void setPassword(String password, BCryptPasswordEncoder encoder) {
+        this.passwordHash = encoder.encode(password);
     }
 
-    public void setFirstname(String firstname) {
-        this.firstname = firstname;
+    public String getName() {
+        return name;
     }
 
-    public String getLastname() {
-        return lastname;
-    }
-
-    public void setLastname(String lastname) {
-        this.lastname = lastname;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getContactNumber() {
@@ -98,40 +87,5 @@ public class User implements UserDetails {
 
     public void setIsActive(Boolean isActive) {
         this.isActive = isActive;
-    }
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.singletonList(new SimpleGrantedAuthority(role));
-    }
-
-    @Override
-    public String getPassword() {
-        return this.passwordHash;
-    }
-
-    @Override
-    public String getUsername() {
-        return this.email;
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return this.isActive;
     }
 }
