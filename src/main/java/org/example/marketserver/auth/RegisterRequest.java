@@ -1,10 +1,11 @@
 package org.example.marketserver.auth;
 
-import com.alibou.security.user.Role;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.example.marketserver.models.Role;
 
 @Data
 @Builder
