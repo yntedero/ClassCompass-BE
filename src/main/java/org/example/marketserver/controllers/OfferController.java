@@ -26,10 +26,12 @@ public class OfferController {
     }
 
     @GetMapping
-    public ResponseEntity<List<OfferDTO>> getAllOffers() {
-        List<OfferDTO> allOffers = offerService.getAllOffers();
-        return ResponseEntity.ok(allOffers);
+    public ResponseEntity<List<OfferDTO>> getAllOffers(@RequestParam(required = false) Long cityId,
+                                                       @RequestParam(required = false) Long categoryId) {
+        List<OfferDTO> filteredOffers = offerService.getAllOffers(cityId, categoryId);
+        return ResponseEntity.ok(filteredOffers);
     }
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteOffer(@PathVariable Long id) {
