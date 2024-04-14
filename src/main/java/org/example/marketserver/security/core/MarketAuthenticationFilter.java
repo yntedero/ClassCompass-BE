@@ -4,12 +4,14 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.example.marketserver.security.dtos.UserRolesDTO;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
+import org.example.marketserver.security.services.AuthenticationService;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -17,26 +19,30 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class MarketAuthenticationFilter extends OncePerRequestFilter {
+    private final AuthenticationService authenticationService;
+
+    public MarketAuthenticationFilter(AuthenticationService authenticationService) {
+        this.authenticationService = authenticationService;
+    }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
+                                    FilterChain filterChain) throws ServletException, IOException {
         String authHeader = request.getHeader("Authorization");
-        if ( !StringUtils.hasText(authHeader) || !authHeader.startsWith("Bearer ") ) {
-            throw new AuthenticationCredentialsNotFoundException("Authorization header is missing or invalid");
+        if ( !StringUtils.hasLength(authHeader) || ! authHeader.startsWith("Bearer ")) {
+            throw new AuthenticationCredentialsNotFoundException("Authentication failed!");
         }
 
-        String token = authHeader.substring("Bearer ".length()).trim(); // vytiahnutie tokenu z poziadavky
+        String token = authHeader.substring("Bearer".length()).trim();
+        UserRolesDTO userRoles = authenticationService.authenticate(token);
 
-        // vystup: token, userRoles, username (zatial len username)
-        String[] userRoles = new String[]{"ROLE_USER"}; // vytvorenie rolí
+        List<SimpleGrantedAuthority> roles = userRoles.getRoles().stream().map(
+                role -> new SimpleGrantedAuthority(role)).collect(Collectors.toList());
 
-        List<SimpleGrantedAuthority> roles = Arrays.stream(userRoles).toList().stream()
-                .map(
-                        role -> new SimpleGrantedAuthority(role)).collect(Collectors.toList()); // vytvorenie zoznamu rolí
+        UsernamePasswordAuthenticationToken auth
+                = new UsernamePasswordAuthenticationToken(userRoles.getUserName(), null, roles);
+        SecurityContextHolder.getContext().setAuthentication(auth);
 
-        UsernamePasswordAuthenticationToken auth =
-                new UsernamePasswordAuthenticationToken(token, null, roles); // vytvorenie autentifikacie
-        SecurityContextHolder.getContext().setAuthentication(auth); // nastavenie autentifikacie
-        filterChain.doFilter(request, response); // preposlanie poziadavky
+        filterChain.doFilter(request, response);
     }
 }
