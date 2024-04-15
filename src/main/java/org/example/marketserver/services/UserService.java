@@ -34,7 +34,15 @@ public class UserService {
 
         user.setPasswordHash(passwordEncoder.encode(userDTO.getPassword()));
         user.setContactNumber(userDTO.getContact());
-        user.setRole(userDTO.getRole().toUpperCase());
+
+        String role = userDTO.getRole();
+        if (role != null) {
+            user.setRole(role.toUpperCase());
+        } else {
+            // Set default role as 'USER'
+            user.setRole("USER");
+        }
+
         user.setIsActive(true);
         User savedUser = userRepository.save(user);
         return mapToDTO(savedUser);
