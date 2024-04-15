@@ -15,25 +15,32 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.web.util.UrlPathHelper;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 @Component
 public class MarketAuthenticationFilter extends OncePerRequestFilter {
 
     private final AuthenticationService authenticationService;
-
+    private final List<String> excludedUrls = Arrays.asList("/api/authentication", "/api/users", "/api/roles");
+    private UrlPathHelper urlPathHelper = new UrlPathHelper();
     @Autowired
     public MarketAuthenticationFilter(AuthenticationService authenticationService) {
         this.authenticationService = authenticationService;
     }
-
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+        String path = urlPathHelper.getPathWithinApplication(request);
+        return excludedUrls.contains(path);
+    }
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
         String authHeader = request.getHeader("Authorization");
-        if ( !StringUtils.hasLength(authHeader) || ! authHeader.startsWith("Bearer ")) {
+        if ( !StringUtils.hasLength(authHeader) || !authHeader.startsWith("Bearer ")) {
             throw new AuthenticationCredentialsNotFoundException("Authentication failed!");
         }
 
