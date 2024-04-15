@@ -32,7 +32,11 @@ public class OfferController {
         return ResponseEntity.ok(filteredOffers);
     }
 
-
+    @GetMapping("/{id}")
+    public ResponseEntity<OfferDTO> getOfferById(@PathVariable Long id) {
+        OfferDTO offer = offerService.getOfferById(id);
+        return ResponseEntity.ok(offer);
+    }
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteOffer(@PathVariable Long id) {
         offerService.deleteOffer(id);

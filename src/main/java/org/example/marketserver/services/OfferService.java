@@ -7,6 +7,7 @@ import org.example.marketserver.repositories.specifications.OfferSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.example.marketserver.exceptions.ResourceNotFoundException;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -72,5 +73,10 @@ public class OfferService {
         offerDTO.setCityId(offer.getCityId());
         offerDTO.setCategoryId(offer.getCategoryId());
         return offerDTO;
+    }
+    public OfferDTO getOfferById(Long id) {
+        Offer offer = offerRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Offer not found with id " + id));
+        return convertToDTO(offer);
     }
 }
