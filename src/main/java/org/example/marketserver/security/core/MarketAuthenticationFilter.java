@@ -1,6 +1,5 @@
 package org.example.marketserver.security.core;
-
-
+import org.springframework.security.core.GrantedAuthority;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -18,8 +17,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.util.UrlPathHelper;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 @Component
 public class MarketAuthenticationFilter extends OncePerRequestFilter {
@@ -47,13 +45,12 @@ public class MarketAuthenticationFilter extends OncePerRequestFilter {
         String token = authHeader.substring("Bearer".length()).trim();
         UserRolesDTO userRoles = authenticationService.authenticate(token);
 
-        List<SimpleGrantedAuthority> roles = userRoles.getRoles().stream().map(
-                role -> new SimpleGrantedAuthority(role)).collect(Collectors.toList());
+        String userRole = userRoles.getRole();
+        Collection<GrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority(userRole));
 
-        UsernamePasswordAuthenticationToken auth
-                = new UsernamePasswordAuthenticationToken(userRoles.getUserName(), null, roles);
+        CustomAuthentication auth
+                = new CustomAuthentication(userRoles.getUserId(), userRoles.getUserId(), null, authorities);
         SecurityContextHolder.getContext().setAuthentication(auth);
-
         filterChain.doFilter(request, response);
     }
 

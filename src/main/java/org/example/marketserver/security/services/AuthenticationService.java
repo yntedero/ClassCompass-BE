@@ -14,6 +14,7 @@ import org.example.marketserver.repositories.UserRepository;
 import org.example.marketserver.models.User;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.Collections;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
@@ -66,12 +67,9 @@ public class AuthenticationService {
 
         validateTokenExpiration(optionalToken.get());
 
-        Set<RoleEntity> roles = optionalToken.get().getUser().getRoles();
-        Set<String> roleNames = roles.stream()
-                .map( entry -> entry.getRoleName())
-                .collect(Collectors.toSet());
+        String role = optionalToken.get().getUser().getRole();
 
-        return new UserRolesDTO(optionalToken.get().getUser().getId(), roleNames);
+        return new UserRolesDTO(optionalToken.get().getUser().getId(), optionalToken.get().getUser().getEmail(), role);
     }
     private void validateTokenExpiration(TokenEntity token) {
         LocalDateTime now = LocalDateTime.now();

@@ -4,20 +4,22 @@ import java.util.Set;
 
 public class UserRolesDTO {
 
-    private final Long userId;
-    private final Set<String> roles;
+    private final Long id;
+    private final String email;
+    private final String role;
 
-    public UserRolesDTO(Long userId, Set<String> roles) {
-        this.userId = userId;
-        this.roles = roles;
+    public UserRolesDTO(Long id, String email,String role) {
+        this.id = id;
+        this.email = email;
+        this.role = role;
     }
 
-    public Long getUserName() {
-        return userId;
+    public Long getUserId() {
+        return id;
     }
-
-    public Set<String> getRoles() {
-        return roles;
+    public String getUserName(){return email;}
+    public String getRole() {
+        return role;
     }
 
 }

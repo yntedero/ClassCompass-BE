@@ -32,14 +32,8 @@ public class User {
     @Column(nullable = false)
     private Boolean isActive;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "user_roles",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id")
-    )
 
-    private Set<RoleEntity> roles = new HashSet<>();
+
     public Long getId() {
         return id;
     }
@@ -102,11 +96,5 @@ public class User {
     }
 
 
-    public Set<RoleEntity> getRoles() {
-        return roles;
-    }
 
-    public void setRoles(Set<RoleEntity> roles) {
-        this.roles = roles;
-    }
 }
