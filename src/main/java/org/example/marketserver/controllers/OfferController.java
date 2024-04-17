@@ -2,9 +2,11 @@ package org.example.marketserver.controllers;
 
 
 import org.example.marketserver.dtos.OfferDTO;
+import org.example.marketserver.security.core.CustomAuthentication;
 import org.example.marketserver.services.OfferService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,8 +22,12 @@ public class OfferController {
         this.offerService = offerService;
     }
 
+
     @PostMapping
     public ResponseEntity<OfferDTO> createOffer(@RequestBody OfferDTO offerDTO) {
+        CustomAuthentication customAuth = (CustomAuthentication) SecurityContextHolder.getContext().getAuthentication();
+        Long userId = (Long) customAuth.getPrincipal();
+        offerDTO.setUserId(userId);
         OfferDTO newOffer = offerService.createOffer(offerDTO);
         return ResponseEntity.ok(newOffer);
     }
