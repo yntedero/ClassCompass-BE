@@ -2,6 +2,7 @@ package org.example.marketserver.controllers;
 import org.example.marketserver.dtos.CityDTO;
 import org.example.marketserver.models.City;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.example.marketserver.services.CityService;
 
@@ -19,6 +20,7 @@ public class CityController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAuthority('ADMIN')")
     public CityDTO createCity(@RequestBody CityDTO cityDTO) {
         return cityService.createCity(cityDTO);
     }

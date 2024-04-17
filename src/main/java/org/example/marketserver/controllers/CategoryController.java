@@ -1,4 +1,5 @@
 package org.example.marketserver.controllers;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 import org.example.marketserver.dtos.CategoryDTO;
 import org.example.marketserver.models.Category;
@@ -22,6 +23,7 @@ public class CategoryController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAuthority('ADMIN')")
     public CategoryDTO createCategory(@RequestBody CategoryDTO categoryDTO) {
         return categoryService.createCategory(categoryDTO);
     }

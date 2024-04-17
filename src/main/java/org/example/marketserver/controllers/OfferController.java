@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 @RestController
 @RequestMapping("/api/offers")
@@ -34,6 +35,7 @@ public class OfferController {
 
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("@offerService.getOfferById(#id) == authentication.principal")
     public ResponseEntity<Void> deleteOffer(@PathVariable Long id) {
         offerService.deleteOffer(id);
         return ResponseEntity.noContent().build();
