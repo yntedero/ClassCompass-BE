@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 public class MarketAuthenticationFilter extends OncePerRequestFilter {
 
     private final AuthenticationService authenticationService;
-    private final List<String> excludedUrls = Arrays.asList("/api/authentication", "/api/users", "/api/roles");
+    private final List<String> excludedUrls = Arrays.asList("/api/authentication", "/api/users", "/api/roles","/ws");
     private UrlPathHelper urlPathHelper = new UrlPathHelper();
     @Autowired
     public MarketAuthenticationFilter(AuthenticationService authenticationService) {

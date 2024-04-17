@@ -79,6 +79,20 @@ public class AuthenticationService {
             throw new AuthenticationCredentialsNotFoundException("Authentication failed!");
         }
     }
+    @Transactional
+    public boolean validateToken(String token) {
+        Optional<TokenEntity> optionalToken = tokenRepository.findByToken(token);
+
+        if (optionalToken.isEmpty()) {
+            // Token not found
+            return false;
+        }
+
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime tokenExpiration = optionalToken.get().getCreatedAt().plus(TOKEN_VALIDITY_IN_MINUTES, ChronoUnit.MINUTES);
+
+        return !now.isAfter(tokenExpiration);
+    }
 
     @Transactional
     public void tokenRemove(String token) {

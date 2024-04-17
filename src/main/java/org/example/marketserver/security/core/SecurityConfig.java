@@ -38,6 +38,8 @@ public class SecurityConfig {
                         .requestMatchers("/api/roles").permitAll()
                         .requestMatchers("/api/authentication").permitAll()
                         .requestMatchers("/api/users").permitAll()
+                        .requestMatchers("/ws/**").permitAll()
+
                         .anyRequest().permitAll())
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(authEntryPoint))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -55,7 +57,12 @@ public class SecurityConfig {
                 String requestURI = request.getRequestURI();
                 if (requestURI.startsWith("/api/roles") ||
                         requestURI.startsWith("/api/authentication") ||
-                        requestURI.startsWith("/api/users")) {
+                        requestURI.startsWith("/api/users") ||
+                        requestURI.startsWith("/app") ||
+                        requestURI.startsWith("/user") ||
+                        requestURI.startsWith("/ws"))
+
+                {
                     filterChain.doFilter(request, response);
                 } else {
                     new MarketAuthenticationFilter(authenticationService).doFilter(request, response, filterChain);
