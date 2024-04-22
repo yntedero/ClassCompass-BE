@@ -14,6 +14,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 
 @RestController
 @RequestMapping("/api/offers")
+@CrossOrigin(origins = "h")
 public class OfferController {
     private final OfferService offerService;
 

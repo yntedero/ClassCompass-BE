@@ -13,6 +13,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
+import org.springframework.web.filter.CorsFilter;
 import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import jakarta.servlet.FilterChain;
@@ -29,44 +30,20 @@ public class SecurityConfig {
     @Autowired
     private MarketAuthenticationEntryPoint authEntryPoint;
 
+    @Autowired
+    private CorsFilter corsFilter;
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("").permitAll()
-                        .requestMatchers("/api/roles").permitAll()
-                        .requestMatchers("/api/authentication").permitAll()
-                        .requestMatchers("/api/users").permitAll()
-                        .anyRequest().permitAll())
+                        .requestMatchers("/api/roles", "/api/authentication", "/api/users").permitAll()
+                        .anyRequest().authenticated())
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(authEntryPoint))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .addFilterBefore(customFilter(), UsernamePasswordAuthenticationFilter.class);
-
+                .addFilterBefore(corsFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterAfter(new MarketAuthenticationFilter(authenticationService), CorsFilter.class);
         return http.build();
-    }
-
-    @Bean
-    public OncePerRequestFilter customFilter() {
-        return new OncePerRequestFilter() {
-            @Override
-            protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-                    throws ServletException, IOException {
-                String requestURI = request.getRequestURI();
-                if (requestURI.startsWith("/api/roles") ||
-                        requestURI.startsWith("/api/authentication") ||
-                        requestURI.startsWith("/api/users")) {
-                    filterChain.doFilter(request, response);
-                } else {
-                    new MarketAuthenticationFilter(authenticationService).doFilter(request, response, filterChain);
-                }
-            }
-        };
-    }
-
-    @Bean
-    public WebSecurityCustomizer webSecurityCustomizer() {
-        return (web) -> web.ignoring().requestMatchers("/api/authentication");
     }
 
     @Bean

@@ -11,13 +11,12 @@ import java.util.Base64;
 import java.util.Optional;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:4200")
 public class AuthenticationController {
 
     private final String AUTHORIZATION_HEADER = "Authorization";
-
     @Autowired
     private AuthenticationService authenticationService;
-
     @PostMapping("/api/authentication")
     public void login(@RequestHeader(value = AUTHORIZATION_HEADER, required = false) Optional<String> authentication,
                       HttpServletResponse response) {

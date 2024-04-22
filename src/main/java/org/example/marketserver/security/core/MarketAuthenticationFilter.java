@@ -13,6 +13,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
+import org.springframework.web.filter.CorsFilter;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.util.UrlPathHelper;
 
@@ -32,16 +33,18 @@ public class MarketAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
         String path = urlPathHelper.getPathWithinApplication(request);
-        return excludedUrls.contains(path);
+        return excludedUrls.contains(path)|| request.getMethod().equals("OPTIONS");
     }
+    @Autowired
+    private CorsFilter corsFilter;
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
         String authHeader = request.getHeader("Authorization");
+        System.out.println("authHeader: " + authHeader);
         if ( !StringUtils.hasLength(authHeader) || !authHeader.startsWith("Bearer ")) {
             throw new AuthenticationCredentialsNotFoundException("Authentication failed!");
         }
-
         String token = authHeader.substring("Bearer".length()).trim();
         UserRolesDTO userRoles = authenticationService.authenticate(token);
 

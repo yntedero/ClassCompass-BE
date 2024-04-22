@@ -18,10 +18,8 @@ import java.util.List;
 @Controller
 @RequiredArgsConstructor
 public class MessageController {
-
     private final SimpMessagingTemplate messagingTemplate;
     private final MessageService messageService;
-
     @MessageMapping("/chat.send")
     @SendTo("/user/messages")
     public MessageDTO processMessage(@Payload MessageDTO messageDTO) {
@@ -32,7 +30,6 @@ public class MessageController {
         );
         return savedMessage;
     }
-
     @GetMapping("/messages/{senderId}/{recipientId}")
     public ResponseEntity<List<MessageDTO>> findChatMessages(@PathVariable Long senderId,
                                                              @PathVariable Long recipientId) {
