@@ -40,6 +40,11 @@ public class MessageService {
         List<Message> messages = messageRepository.findBySenderIdAndReceiverIdOrderByTimestampAsc(senderId, receiverId);
         return messages.stream().map(this::mapToDTO).collect(Collectors.toList());
     }
+    public Long getMessageByRecip(Long recipientId) {
+        Message message = messageRepository.findByRecipientId(recipientId)
+                .orElseThrow(() -> new RuntimeException("Message not found for recipient ID " + recipientId));
+        return message.getReceiver().getId();
+    }
 
     private MessageDTO mapToDTO(Message message) {
         MessageDTO dto = new MessageDTO();
