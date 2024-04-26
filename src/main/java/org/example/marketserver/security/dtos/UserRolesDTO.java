@@ -17,7 +17,7 @@ public class UserRolesDTO {
     public Long getUserId() {
         return id;
     }
-    public String getUserName(){return email;}
+    public String getEmail(){return email;}
     public String getRole() {
         return role;
     }

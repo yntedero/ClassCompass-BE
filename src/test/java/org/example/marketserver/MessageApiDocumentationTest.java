@@ -3,7 +3,6 @@ package org.example.marketserver;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.example.marketserver.controllers.MessageController;
 import org.example.marketserver.dtos.MessageDTO;
-import org.example.marketserver.services.MessageService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
