@@ -5,7 +5,7 @@ import lombok.Data;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "messages3")
+@Table(name = "messages")
 @Data
 public class Message{
     @Id

@@ -16,8 +16,8 @@ public class CorsConfig {
     public CorsFilter corsFilter() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
-        config.addAllowedOriginPattern("*");
-//        config.setAllowedOriginPatterns(Arrays.asList("http://localhost:3000", "http://localhost:4200", "http://localhost:5500"));
+        //config.addAllowedOriginPattern("*");
+        config.setAllowedOriginPatterns(Arrays.asList("http://localhost:4200"));
         config.addAllowedMethod("*");
         config.addAllowedHeader("*");
         config.setAllowCredentials(true);//nemozem pridat localost:5500,4200

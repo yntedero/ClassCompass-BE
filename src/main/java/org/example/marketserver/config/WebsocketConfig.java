@@ -39,13 +39,11 @@ import java.util.Optional;
 @Slf4j
 public class WebsocketConfig implements WebSocketMessageBrokerConfigurer {
 
-//    private final JwtTokenUtil jwtTokenUtil;
-//    private final UserDetailsServiceImpl userDetailsService;
     private final TokenRepository tokenRepository;
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/ws").withSockJS();
-        registry.addEndpoint("/ws");
+        registry.addEndpoint("/ws").setAllowedOrigins("http://localhost:4200").withSockJS();
+        registry.addEndpoint("/ws").setAllowedOrigins("http://localhost:4200");
     }
 
     @Override
