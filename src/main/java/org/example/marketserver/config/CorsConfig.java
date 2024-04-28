@@ -18,7 +18,11 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @EnableWebMvc
 public class CorsConfig implements WebMvcConfigurer {
 
+<<<<<<< HEAD
 //    @Override
+=======
+    //    @Override
+>>>>>>> 6331fdcde1d552288efd351440e62fb4df0c6df9
 //    public void addCorsMappings(CorsRegistry registry) {
 //        registry.addMapping("/**")
 //                .allowedMethods("GET", "POST", "PUT", "DELETE")
