@@ -14,7 +14,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 
 @RestController
 @RequestMapping("/api/offers")
-@CrossOrigin(origins = "h")
 public class OfferController {
     private final OfferService offerService;
 
@@ -22,7 +21,6 @@ public class OfferController {
     public OfferController(OfferService offerService) {
         this.offerService = offerService;
     }
-
 
     @PostMapping
     public ResponseEntity<OfferDTO> createOffer(@RequestBody OfferDTO offerDTO) {
@@ -39,6 +37,7 @@ public class OfferController {
         List<OfferDTO> filteredOffers = offerService.getAllOffers(cityId, categoryId);
         return ResponseEntity.ok(filteredOffers);
     }
+
 
     @GetMapping("/{id}")
     public ResponseEntity<OfferDTO> getOfferById(@PathVariable Long id) {

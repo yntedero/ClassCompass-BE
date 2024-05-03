@@ -1,7 +1,11 @@
 package org.example.marketserver.security.services;
 
 
+import org.example.marketserver.dtos.UserDTO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -53,10 +57,29 @@ public class AuthenticationService {
         token.setUser(optionalUser.get());
         token.setCreatedAt(LocalDateTime.now());
         tokenRepository.save(token);
-
         return token.getToken();
     }
 
+//    public UserDTO getUserDetails() {
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//        String userIdString = (String) authentication.getPrincipal();
+//        System.out.println("userIdString: " + userIdString);
+//        Long userId = Long.valueOf(userIdString);
+//        User user = userRepository.findById(userId)
+//                .orElseThrow(() -> new RuntimeException("User not found with id " + userId));
+//        return this.mapToDTO(user);
+//    }
+//    private UserDTO mapToDTO(User user) {
+//        UserDTO dto = new UserDTO();
+//        dto.setId(user.getId());
+//        dto.setEmail(user.getEmail());
+//        dto.setFirstName(user.getName().split(" ")[0]);
+//        dto.setLastName(user.getName().split(" ").length > 1 ? user.getName().split(" ")[1] : "");
+//        dto.setContact(user.getContactNumber());
+//        dto.setRole(user.getRole());
+//        dto.setStatus(user.getIsActive() ? "ACTIVE" : "INACTIVE");
+//        return dto;
+//    }
     @Transactional
     public UserRolesDTO authenticate(String token) {
         Optional<TokenEntity> optionalToken = tokenRepository.findByToken(token);
@@ -71,7 +94,7 @@ public class AuthenticationService {
 
         return new UserRolesDTO(optionalToken.get().getUser().getId(), optionalToken.get().getUser().getEmail(), role);
     }
-    private void validateTokenExpiration(TokenEntity token) {
+    public void validateTokenExpiration(TokenEntity token) {
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime tokenExpiration = token.getCreatedAt().plus(TOKEN_VALIDITY_IN_MINUTES, ChronoUnit.MINUTES);
 

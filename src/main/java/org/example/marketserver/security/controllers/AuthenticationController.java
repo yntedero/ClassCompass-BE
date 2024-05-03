@@ -1,9 +1,11 @@
 package org.example.marketserver.security.controllers;
 
 import jakarta.servlet.http.HttpServletResponse;
+import org.example.marketserver.dtos.UserDTO;
 import org.example.marketserver.security.services.AuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.nio.charset.StandardCharsets;
@@ -13,7 +15,6 @@ import java.util.Optional;
 @RestController
 @CrossOrigin(origins = "http://localhost:4200")
 public class AuthenticationController {
-
     private final String AUTHORIZATION_HEADER = "Authorization";
     @Autowired
     private AuthenticationService authenticationService;
@@ -27,7 +28,6 @@ public class AuthenticationController {
 
         String[] credentials = credentialsDecode(authentication.get());
         String token = authenticationService.authenticate(credentials[0], credentials[1]);
-
         response.setStatus(HttpStatus.OK.value());
         response.addHeader(AUTHORIZATION_HEADER, "Bearer " + token);
     }

@@ -1,62 +1,67 @@
 package org.example.marketserver.controllers;
 
+
+
 import lombok.RequiredArgsConstructor;
-import org.example.marketserver.dtos.MessageDTO;
-import org.example.marketserver.security.services.AuthenticationService;
-import org.example.marketserver.services.MessageService;
-import org.springframework.http.HttpStatus;
+import lombok.extern.slf4j.Slf4j;
+import org.example.marketserver.dtos.UserDTO;
+import org.example.marketserver.services.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
-import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestHeader;
+import org.example.marketserver.repositories.MessageRepository;
+import org.example.marketserver.models.Message;
+import org.example.marketserver.dtos.MessageDTO;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Optional;
 
+import org.example.marketserver.models.User;
 @Controller
 @RequiredArgsConstructor
+@Slf4j
 public class MessageController {
 
-    private final SimpMessagingTemplate messagingTemplate;
-    private final MessageService messageService;
-    private final AuthenticationService authenticationService;
+    private final SimpMessagingTemplate simpMessagingTemplate;
+    private final MessageRepository messageRepository;
+    private final UserService userService;
 
-    @MessageMapping("/chat.send")
-    @SendTo("/user/messages")
-    public ResponseEntity<?> processMessage(@Payload MessageDTO messageDTO, @RequestHeader("Authorization") String authorizationHeader) {
-        String token = extractToken(authorizationHeader);
-        if (token == null || !authenticationService.validateToken(token)) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
-
-        MessageDTO savedMessage = messageService.sendMessage(messageDTO);
-        messagingTemplate.convertAndSendToUser(
-                String.valueOf(messageDTO.getReceiverId()), "/queue/messages",
-                savedMessage
-        );
-        return ResponseEntity.ok(savedMessage);
+    @MessageMapping("/chat")
+    public void chat(@Payload MessageDTO message) {
+        log.info("Message received: {}", message);
+        Message messageEntity = new Message();
+        messageEntity.setToUser(message.to());
+        messageEntity.setMessage(message.message());
+        messageEntity.setFromUser(message.from());
+        messageEntity.setTimestamp(message.timestamp());
+        System.out.println("messageEntity" + messageEntity);
+        messageRepository.save(messageEntity);
+//        simpMessagingTemplate.convertAndSend("/topic", message);
+        System.out.println("message.to()" + message.to());
+        simpMessagingTemplate.convertAndSendToUser(message.to(), "/topic", message);
+        simpMessagingTemplate.convertAndSendToUser(message.from(), "/topic", message);
     }
 
-    @GetMapping("/messages/{senderId}/{recipientId}")
-    public ResponseEntity<List<MessageDTO>> findChatMessages(@PathVariable Long senderId,
-                                                             @PathVariable Long recipientId,
-                                                             @RequestHeader("Authorization") String authorizationHeader) {
-        String token = extractToken(authorizationHeader);
-        if (token == null || !authenticationService.validateToken(token)) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+    @GetMapping("/messages")
+    public ResponseEntity<List<Message>> getAllMessages(Authentication authentication) {
+        Object principal = authentication.getPrincipal();
+        Long userId = Long.valueOf(principal.toString());
+        Optional<UserDTO> userOptional = userService.getUserById(Long.valueOf(userId.toString()));
+        if (!userOptional.isPresent()) {
+            return ResponseEntity.notFound().build();
         }
-
-        return ResponseEntity.ok(messageService.getMessagesBetweenUsers(senderId, recipientId));
+        UserDTO user = userOptional.get();
+        String userEmail = user.getEmail();
+        List<Message> messages = messageRepository.findAllByUser(userEmail);
+        return ResponseEntity.ok(messages);
     }
 
-    private String extractToken(String authorizationHeader) {
-        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-            return authorizationHeader.substring(7);
-        }
-        return null;
-    }
 }
+
