@@ -40,7 +40,7 @@ public class SecurityConfig {
 //                .cors(AbstractHttpConfigurer::disable)
 //                .cors(cors -> cors.configurationSource(request -> new CorsConfiguration().applyPermitDefaultValues())) // Use non-deprecated method
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/authentication", "/index.html", "/ws/**").permitAll()
+                        .requestMatchers("/api/authentication", "/api/users", "/ws/**").permitAll()
                         .anyRequest().authenticated()
                 )
 //                .exceptionHandling(exception -> exception.authenticationEntryPoint(authEntryPoint))

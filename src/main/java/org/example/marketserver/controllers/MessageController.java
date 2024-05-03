@@ -16,6 +16,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.example.marketserver.repositories.MessageRepository;
 import org.example.marketserver.models.Message;
 import org.example.marketserver.dtos.MessageDTO;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,7 +39,8 @@ public class MessageController {
         messageEntity.setToUser(message.to());
         messageEntity.setMessage(message.message());
         messageEntity.setFromUser(message.from());
-        System.out.println("messageEntity" + messageEntity);;
+        messageEntity.setTimestamp(message.timestamp());
+        System.out.println("messageEntity" + messageEntity);
         messageRepository.save(messageEntity);
 //        simpMessagingTemplate.convertAndSend("/topic", message);
         System.out.println("message.to()" + message.to());
@@ -57,4 +61,5 @@ public class MessageController {
         List<Message> messages = messageRepository.findAllByUser(userEmail);
         return ResponseEntity.ok(messages);
     }
+
 }

@@ -28,7 +28,7 @@ import org.springframework.core.Ordered;
 public class MarketAuthenticationFilter extends OncePerRequestFilter{
 
     private final AuthenticationService authenticationService;
-    private final List<String> excludedUrls = Arrays.asList("/api/authentication", "/api/roles", "/index.html");
+    private final List<String> excludedUrls = Arrays.asList("/api/authentication", "/api/roles", "/api/users");
     private UrlPathHelper urlPathHelper = new UrlPathHelper();
 
     @Autowired
