@@ -59,10 +59,10 @@ public class OfferService {
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
     }
-    public Long getOfferById(Long id) {
+    public OfferDTO getOfferById(Long id) {
         Offer offer = offerRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Offer not found with id " + id));
-        return offer.getUserId();
+        return convertToDTO(offer);
     }
     public void deleteOffer(Long id) {
         offerRepository.deleteById(id);

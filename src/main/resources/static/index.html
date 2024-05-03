@@ -102,6 +102,14 @@
 <script>
     function getItem(key) {
         return localStorage.getItem(key);
+
+    var stompClient = null;
+
+    function connect() {
+        var socket = new SockJS('/ws');
+        stompClient = Stomp.over(socket);
+
+        stompClient.connect({}, onConnected, onError);
     }
 
     function setConnected(connected) {

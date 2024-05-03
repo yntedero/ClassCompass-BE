@@ -37,6 +37,17 @@ public class OfferController {
         List<OfferDTO> filteredOffers = offerService.getAllOffers(cityId, categoryId);
         return ResponseEntity.ok(filteredOffers);
     }
+
+
+    @GetMapping("/{id}")
+    public ResponseEntity<OfferDTO> getOfferById(@PathVariable Long id) {
+        OfferDTO offer = offerService.getOfferById(id);
+        if (offer != null) {
+            return ResponseEntity.ok(offer);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
     @DeleteMapping("/{id}")
     @PreAuthorize("@offerService.getOfferById(#id) == authentication.principal")
     public ResponseEntity<Void> deleteOffer(@PathVariable Long id) {
