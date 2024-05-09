@@ -16,12 +16,10 @@ import org.springframework.security.access.prepost.PreAuthorize;
 @RequestMapping("/api/offers")
 public class OfferController {
     private final OfferService offerService;
-
     @Autowired
     public OfferController(OfferService offerService) {
         this.offerService = offerService;
     }
-
     @PostMapping
     public ResponseEntity<OfferDTO> createOffer(@RequestBody OfferDTO offerDTO) {
         CustomAuthentication customAuth = (CustomAuthentication) SecurityContextHolder.getContext().getAuthentication();
@@ -30,7 +28,6 @@ public class OfferController {
         OfferDTO newOffer = offerService.createOffer(offerDTO);
         return ResponseEntity.ok(newOffer);
     }
-
     @GetMapping
     public ResponseEntity<List<OfferDTO>> getAllOffers(@RequestParam(required = false) Long cityId,
                                                        @RequestParam(required = false) Long categoryId) {

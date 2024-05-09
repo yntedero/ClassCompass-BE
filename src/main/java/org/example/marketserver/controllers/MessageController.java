@@ -62,6 +62,5 @@ public class MessageController {
         List<Message> messages = messageRepository.findAllByUser(userEmail);
         return ResponseEntity.ok(messages);
     }
-
 }
 
