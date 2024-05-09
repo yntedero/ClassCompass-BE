@@ -7,7 +7,12 @@ import org.example.marketserver.repositories.specifications.OfferSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Base64;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,16 +34,11 @@ public class OfferService {
         offer.setCityId(offerDTO.getCityId());
         offer.setCategoryId(offerDTO.getCategoryId());
 
+        offer.setImage(offerDTO.getImage());
+
         offer = offerRepository.save(offer);
 
         OfferDTO savedOfferDTO = convertToDTO(offer);
-//        savedOfferDTO.setId(offer.getId());
-//        savedOfferDTO.setTitle(offer.getTitle());
-//        savedOfferDTO.setDescription(offer.getDescription());
-//        savedOfferDTO.setUserId(offer.getUserId());
-//        savedOfferDTO.setCityId(offer.getCityId());
-//        savedOfferDTO.setCategoryId(offer.getCategoryId());
-
         return savedOfferDTO;
     }
 

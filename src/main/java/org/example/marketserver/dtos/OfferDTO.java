@@ -18,4 +18,5 @@ public class OfferDTO {
     private Long userId;
     private Long cityId;
     private Long categoryId;
+    private String image;
 }

@@ -1,5 +1,6 @@
 package org.example.marketserver.controllers;
 
+import java.util.Base64;
 
 import org.example.marketserver.dtos.OfferDTO;
 import org.example.marketserver.security.core.CustomAuthentication;
@@ -20,13 +21,16 @@ public class OfferController {
     public OfferController(OfferService offerService) {
         this.offerService = offerService;
     }
+
     @PostMapping
-    public ResponseEntity<OfferDTO> createOffer(@RequestBody OfferDTO offerDTO) {
+    public ResponseEntity<String> createOffer(@RequestBody OfferDTO offerDTO) {
         CustomAuthentication customAuth = (CustomAuthentication) SecurityContextHolder.getContext().getAuthentication();
         Long userId = (Long) customAuth.getPrincipal();
         offerDTO.setUserId(userId);
-        OfferDTO newOffer = offerService.createOffer(offerDTO);
-        return ResponseEntity.ok(newOffer);
+
+        OfferDTO savedOfferDTO = offerService.createOffer(offerDTO);
+
+        return ResponseEntity.ok(savedOfferDTO.getImage());
     }
     @GetMapping
     public ResponseEntity<List<OfferDTO>> getAllOffers(@RequestParam(required = false) Long cityId,
