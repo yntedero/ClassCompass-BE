@@ -27,6 +27,7 @@ public class OfferService {
     }
 
     public OfferDTO createOffer(OfferDTO offerDTO) {
+
         Offer offer = new Offer();
         offer.setTitle(offerDTO.getTitle());
         offer.setDescription(offerDTO.getDescription());
@@ -34,10 +35,11 @@ public class OfferService {
         offer.setCityId(offerDTO.getCityId());
         offer.setCategoryId(offerDTO.getCategoryId());
 
-        offer.setImage(offerDTO.getImage());
+        offer.setFile(offerDTO.getFile());
 
         offer = offerRepository.save(offer);
 
+        offerRepository.flush();
         OfferDTO savedOfferDTO = convertToDTO(offer);
         return savedOfferDTO;
     }
@@ -76,6 +78,7 @@ public class OfferService {
         offerDTO.setUserId(offer.getUserId());
         offerDTO.setCityId(offer.getCityId());
         offerDTO.setCategoryId(offer.getCategoryId());
+        offerDTO.setFile(offer.getFile()); // Add this line
         return offerDTO;
     }
 }

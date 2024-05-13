@@ -28,6 +28,6 @@ public class Offer {
     @Column(name = "category_id", nullable = false)
     private Long categoryId;
 
-    @Column
-    private String image;
+    @Column(length = 1000000)
+    private String file;
 }

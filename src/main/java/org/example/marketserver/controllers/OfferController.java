@@ -30,7 +30,7 @@ public class OfferController {
 
         OfferDTO savedOfferDTO = offerService.createOffer(offerDTO);
 
-        return ResponseEntity.ok(savedOfferDTO.getImage());
+        return ResponseEntity.ok(savedOfferDTO.getFile());
     }
     @GetMapping
     public ResponseEntity<List<OfferDTO>> getAllOffers(@RequestParam(required = false) Long cityId,
