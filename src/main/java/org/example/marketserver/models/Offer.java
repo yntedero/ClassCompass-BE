@@ -28,6 +28,6 @@ public class Offer {
     @Column(name = "category_id", nullable = false)
     private Long categoryId;
 
-    @Column(length = 1000000)
+    @Column(columnDefinition = "TEXT")
     private String file;
 }
