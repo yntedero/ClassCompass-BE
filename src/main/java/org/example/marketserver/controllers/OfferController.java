@@ -24,6 +24,13 @@ public class OfferController {
 
     @PostMapping
     public ResponseEntity<String> createOffer(@RequestBody OfferDTO offerDTO) {
+        if (offerDTO.getTitle() == null || offerDTO.getTitle().isEmpty() ||
+                offerDTO.getDescription() == null || offerDTO.getDescription().isEmpty() ||
+                offerDTO.getCityId() == null ||
+                offerDTO.getCategoryId() == null ||
+                offerDTO.getFile() == null || offerDTO.getFile().isEmpty()) {
+            return ResponseEntity.badRequest().body("All fields must be filled");
+        }
         CustomAuthentication customAuth = (CustomAuthentication) SecurityContextHolder.getContext().getAuthentication();
         Long userId = (Long) customAuth.getPrincipal();
         offerDTO.setUserId(userId);
