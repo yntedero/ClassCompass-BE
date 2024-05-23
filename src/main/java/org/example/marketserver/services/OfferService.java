@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -25,7 +26,7 @@ public class OfferService {
     public OfferService(OfferRepository offerRepository) {
         this.offerRepository = offerRepository;
     }
-
+    @Transactional
     public OfferDTO createOffer(OfferDTO offerDTO) {
 
         Offer offer = new Offer();

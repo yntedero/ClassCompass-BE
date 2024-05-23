@@ -83,6 +83,8 @@ public class UserController {
         dto.setContact(user.getContactNumber());
         dto.setRole(user.getRole());
         dto.setStatus(user.getIsActive() ? "ACTIVE" : "INACTIVE");
+        System.out.println("id:" + dto.getId() + " email:" + dto.getEmail() + " firstName:" + dto.getFirstName() + " lastName:" + dto.getLastName() + " contact:" + dto.getContact() + " role:" + dto.getRole() + " status:" + dto.getStatus());
+
         return dto;
     }
     @DeleteMapping("/{id}")
