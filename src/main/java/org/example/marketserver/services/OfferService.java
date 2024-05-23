@@ -33,6 +33,7 @@ public class OfferService {
         offer.setTitle(offerDTO.getTitle());
         offer.setDescription(offerDTO.getDescription());
         offer.setUserId(offerDTO.getUserId());
+        offer.setUserEmail(offerDTO.getUserEmail());
         offer.setCityId(offerDTO.getCityId());
         offer.setCategoryId(offerDTO.getCategoryId());
 
@@ -77,9 +78,10 @@ public class OfferService {
         offerDTO.setTitle(offer.getTitle());
         offerDTO.setDescription(offer.getDescription());
         offerDTO.setUserId(offer.getUserId());
+        offerDTO.setUserEmail(offer.getUserEmail());
         offerDTO.setCityId(offer.getCityId());
         offerDTO.setCategoryId(offer.getCategoryId());
-        offerDTO.setFile(offer.getFile()); // Add this line
+        offerDTO.setFile(offer.getFile());
         return offerDTO;
     }
 }

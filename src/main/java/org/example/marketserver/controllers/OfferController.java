@@ -33,8 +33,9 @@ public class OfferController {
         }
         CustomAuthentication customAuth = (CustomAuthentication) SecurityContextHolder.getContext().getAuthentication();
         Long userId = (Long) customAuth.getPrincipal();
+        String userEmail = customAuth.getEmail();
         offerDTO.setUserId(userId);
-
+        offerDTO.setUserEmail(userEmail);
         OfferDTO savedOfferDTO = offerService.createOffer(offerDTO);
 
         return ResponseEntity.ok(savedOfferDTO.getFile());

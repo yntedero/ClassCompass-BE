@@ -22,6 +22,9 @@ public class Offer {
     @Column(name = "user_id", nullable = false)
     private Long userId;
 
+    @Column(name = "user_email", nullable = false)
+    private String userEmail;
+
     @Column(name = "city_id", nullable = false)
     private Long cityId;
 

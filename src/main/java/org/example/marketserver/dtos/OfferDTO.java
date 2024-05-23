@@ -16,6 +16,7 @@ public class OfferDTO {
     private String title;
     private String description;
     private Long userId;
+    private String userEmail;
     private Long cityId;
     private Long categoryId;
     private String file;

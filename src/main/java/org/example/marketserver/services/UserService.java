@@ -33,6 +33,7 @@ public class UserService {
         user.setName(userDTO.getFirstName() + " " + userDTO.getLastName());
 
         user.setPasswordHash(passwordEncoder.encode(userDTO.getPassword()));
+        System.out.println("Password: " + user.getPasswordHash());
         user.setContactNumber(userDTO.getContact());
 
         String role = userDTO.getRole();
