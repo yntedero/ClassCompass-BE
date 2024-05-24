@@ -10,7 +10,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 import org.springframework.security.access.prepost.PreAuthorize;
 
 @RestController
@@ -23,13 +26,15 @@ public class OfferController {
     }
 
     @PostMapping
-    public ResponseEntity<String> createOffer(@RequestBody OfferDTO offerDTO) {
+    ResponseEntity<Map<String, String>> createOffer(@RequestBody OfferDTO offerDTO) {
         if (offerDTO.getTitle() == null || offerDTO.getTitle().isEmpty() ||
                 offerDTO.getDescription() == null || offerDTO.getDescription().isEmpty() ||
                 offerDTO.getCityId() == null ||
                 offerDTO.getCategoryId() == null ||
                 offerDTO.getFile() == null || offerDTO.getFile().isEmpty()) {
-            return ResponseEntity.badRequest().body("All fields must be filled");
+            Map<String, String> response = new HashMap<>();
+            response.put("error", "All fields must be filled");
+            return ResponseEntity.badRequest().body(response);
         }
         CustomAuthentication customAuth = (CustomAuthentication) SecurityContextHolder.getContext().getAuthentication();
         Long userId = (Long) customAuth.getPrincipal();
@@ -37,8 +42,10 @@ public class OfferController {
         offerDTO.setUserId(userId);
         offerDTO.setUserEmail(userEmail);
         OfferDTO savedOfferDTO = offerService.createOffer(offerDTO);
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "Offer created with id: " + savedOfferDTO.getId());
 
-        return ResponseEntity.ok(savedOfferDTO.getFile());
+        return ResponseEntity.ok(response);
     }
     @GetMapping
     public ResponseEntity<List<OfferDTO>> getAllOffers(@RequestParam(required = false) Long cityId,
